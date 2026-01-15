@@ -30,16 +30,16 @@ exports.handler = async (event, context) => {
             max_tokens: 100,
             messages: [{
                 role: 'user',
-                content: `You are a military call sign generator for Planet Korob, a gritty sci-fi military outpost. Based on the following story, generate a unique call sign that is:
-- 1-3 words maximum
-- Mix of military, personality traits, and sci-fi themes
-- Gritty and fitting for a post-apocalyptic wasteland setting
-- Similar to Fallout/military aviation call signs
-- Do NOT use quotation marks
+                content: `Based on this story, generate a single-word military call sign that relates to the content or themes in the story.
 
-Story: ${story}
+CRITICAL RULES:
+- Output ONLY ONE WORD
+- Must be either a VERB or a NOUN
+- Must relate to something in the story (theme, action, object, emotion, situation)
+- No explanations, no preambles, no additional text
+- Examples: EMBER, RUST, GHOST, WRENCH, STATIC, GRIND
 
-Respond with ONLY the call sign, nothing else. Make it memorable and badass.`
+Story: ${story}`
             }]
         });
 
