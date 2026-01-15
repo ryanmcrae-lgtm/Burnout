@@ -326,8 +326,8 @@
             submitBtn.disabled = true;
 
             try {
-                // API endpoint for Vercel
-                const response = await fetch('/api/generate-callsign', {
+                // API endpoint for Netlify
+                const response = await fetch('/.netlify/functions/generate-callsign', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
