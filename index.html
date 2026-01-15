@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Planet Burnout</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background: #0a0a0a;
+            color: #00ff00;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* CRT Screen Effect */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Glow effect */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.6) 100%);
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 90%;
+            padding: 40px;
+            border: 3px solid #00ff00;
+            background: rgba(0, 20, 0, 0.8);
+            box-shadow:
+                0 0 20px rgba(0, 255, 0, 0.3),
+                inset 0 0 40px rgba(0, 255, 0, 0.05);
+            position: relative;
+            z-index: 1;
+            animation: flicker 0.15s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.98; }
+            100% { opacity: 1; }
+        }
+
+        .screen-corner {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00ff00;
+        }
+
+        .screen-corner.top-left { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+        .screen-corner.top-right { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+        .screen-corner.bottom-left { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+        .screen-corner.bottom-right { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+
+        h1 {
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #00ff00;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 0.9em;
+            margin-bottom: 40px;
+            opacity: 0.8;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .question {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px #00ff00;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #00ff00;
+            color: #00ff00;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1em;
+            padding: 15px;
+            resize: vertical;
+            box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.1);
+        }
+
+        textarea:focus {
+            outline: none;
+            box-shadow:
+                inset 0 0 10px rgba(0, 255, 0, 0.2),
+                0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        textarea::placeholder {
+            color: rgba(0, 255, 0, 0.5);
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 0.8em;
+            margin-top: 5px;
+            opacity: 0.7;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: transparent;
+            border: 2px solid #00ff00;
+            color: #00ff00;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.1em;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        button:hover:not(:disabled) {
+            background: rgba(0, 255, 0, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .result {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            border: 2px solid #00ff00;
+            background: rgba(0, 50, 0, 0.3);
+            margin-top: 20px;
+            animation: fadeIn 0.5s;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .callsign {
+            font-size: 2em;
+            margin: 20px 0;
+            text-shadow: 0 0 15px #00ff00;
+            letter-spacing: 3px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        .error {
+            display: none;
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            border: 2px solid #ff0000;
+            background: rgba(50, 0, 0, 0.3);
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .hubspot-section {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 2px solid rgba(0, 255, 0, 0.3);
+        }
+
+        /* HubSpot form styling */
+        .hs-form-frame {
+            color: #00ff00;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .question {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="screen-corner top-left"></div>
+        <div class="screen-corner top-right"></div>
+        <div class="screen-corner bottom-left"></div>
+        <div class="screen-corner bottom-right"></div>
+
+        <h1>WELCOME TO PLANET BURNOUT</h1>
+        <div class="subtitle">[ INCOMING TRANSMISSION ]</div>
+
+        <div class="section">
+            <div class="question">TELL ME SOMETHING YOU DID AND RECEIVE YOUR CALL SIGN:</div>
+
+            <textarea
+                id="storyInput"
+                maxlength="500"
+                placeholder="Enter your story here... (max 500 characters)"
+            ></textarea>
+
+            <div class="char-count">
+                <span id="charCount">0</span> / 500
+            </div>
+
+            <button id="submitBtn" onclick="generateCallsign()">GENERATE CALL SIGN</button>
+
+            <div class="loading" id="loading">GENERATING CALL SIGN</div>
+            <div class="error" id="error">ERROR: Unable to generate call sign. Please try again.</div>
+
+            <div class="result" id="result">
+                <div>WELL DONE AND WELCOME TO PLANET KOROB,</div>
+                <div class="callsign" id="callsign"></div>
+            </div>
+        </div>
+
+        <div class="hubspot-section" id="hubspotSection" style="display: none;">
+            <div class="hs-form-frame" data-region="na1" data-form-id="f62a8c62-080d-4790-81bf-a40c3bdbd2f1" data-portal-id="20347263"></div>
+        </div>
+    </div>
+
+    <script src="https://js.hsforms.net/forms/embed/20347263.js" defer></script>
+    <script>
+        const storyInput = document.getElementById('storyInput');
+        const charCount = document.getElementById('charCount');
+        const submitBtn = document.getElementById('submitBtn');
+        const loading = document.getElementById('loading');
+        const error = document.getElementById('error');
+        const result = document.getElementById('result');
+        const callsignEl = document.getElementById('callsign');
+        const hubspotSection = document.getElementById('hubspotSection');
+
+        // Character counter
+        storyInput.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+            submitBtn.disabled = this.value.trim().length === 0;
+        });
+
+        async function generateCallsign() {
+            const story = storyInput.value.trim();
+
+            if (!story) return;
+
+            // Hide previous results/errors
+            result.classList.remove('show');
+            error.classList.remove('show');
+            loading.classList.add('show');
+            submitBtn.disabled = true;
+
+            try {
+                // Replace with your actual API endpoint
+                const response = await fetch('/.netlify/functions/generate-callsign', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ story })
+                });
+
+                if (!response.ok) {
+                    throw new Error('API request failed');
+                }
+
+                const data = await response.json();
+
+                // Display the call sign
+                callsignEl.textContent = data.callsign;
+                result.classList.add('show');
+
+                // Show HubSpot form
+                hubspotSection.style.display = 'block';
+
+                // Scroll to result
+                result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            } catch (err) {
+                console.error('Error:', err);
+                error.classList.add('show');
+            } finally {
+                loading.classList.remove('show');
+                submitBtn.disabled = false;
+            }
+        }
+
+        // Allow Enter key to submit (with Shift+Enter for new line)
+        storyInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (this.value.trim().length > 0) {
+                    generateCallsign();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
