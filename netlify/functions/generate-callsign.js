@@ -26,7 +26,7 @@ exports.handler = async (event, context) => {
 
         // Generate call sign using Claude
         const message = await anthropic.messages.create({
-            model: 'claude-3-5-sonnet-20240620',
+            model: 'claude-3-haiku-20240307',
             max_tokens: 100,
             messages: [{
                 role: 'user',
