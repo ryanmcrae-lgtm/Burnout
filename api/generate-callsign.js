@@ -30,16 +30,15 @@ exports.handler = async (event, context) => {
             max_tokens: 100,
             messages: [{
                 role: 'user',
-                content: `Based on this story, generate a single-word military call sign that relates to the content or themes in the story.
+                content: `Generate ONE SINGLE WORD military call sign from this story. ONE WORD ONLY - no spaces, no hyphens, no multiple words.
 
-CRITICAL RULES:
-- Output ONLY ONE WORD
-- Must be either a VERB or a NOUN
-- Must relate to something in the story (theme, action, object, emotion, situation)
-- No explanations, no preambles, no additional text
-- Examples: EMBER, RUST, GHOST, WRENCH, STATIC, GRIND
+Examples of correct format: EMBER, RUST, GHOST, WRENCH, STATIC, GRIND, PLANE, FLIGHT, BIRD
 
-Story: ${story}`
+The word must relate to something in the story.
+
+Story: ${story}
+
+Output format: ONE_WORD_ONLY`
             }]
         });
 
