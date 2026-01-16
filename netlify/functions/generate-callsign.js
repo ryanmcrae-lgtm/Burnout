@@ -36,10 +36,11 @@ exports.handler = async (event, context) => {
 - Gritty and fitting for a post-apocalyptic wasteland setting
 - Similar to Fallout/military aviation call signs
 - Do NOT use quotation marks
+- CRITICAL: Do NOT use any exact words from the story. Instead, use synonyms, related concepts, or thematically associated words. For example, if the story mentions "winter", use words like "frost", "blizzard", "arctic", or "flake" - never "winter" itself.
 
 Story: ${story}
 
-Respond with ONLY the call sign, nothing else. Make it memorable and badass.`
+Respond with ONLY the call sign, nothing else. Make it memorable and badass. Remember: no words directly from the story - only synonyms or associated terms.`
             }]
         });
 
