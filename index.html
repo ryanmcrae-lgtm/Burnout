@@ -234,8 +234,34 @@
 
         .hubspot-section {
             margin-top: 40px;
-            padding-top: 40px;
-            border-top: 2px solid rgba(0, 255, 0, 0.3);
+            padding: 30px;
+            border: 3px solid #00ff00;
+            background: rgba(0, 40, 0, 0.6);
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.4), inset 0 0 20px rgba(0, 255, 0, 0.1);
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 30px rgba(0, 255, 0, 0.4), inset 0 0 20px rgba(0, 255, 0, 0.1); }
+            50% { box-shadow: 0 0 50px rgba(0, 255, 0, 0.6), inset 0 0 30px rgba(0, 255, 0, 0.2); }
+        }
+
+        .hubspot-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .hubspot-title {
+            font-size: 1.4em;
+            text-shadow: 0 0 15px #00ff00;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .hubspot-subtitle {
+            font-size: 0.95em;
+            opacity: 0.9;
+            line-height: 1.5;
         }
 
         /* HubSpot form styling */
@@ -293,6 +319,10 @@
         </div>
 
         <div class="hubspot-section" id="hubspotSection" style="display: none;">
+            <div class="hubspot-header">
+                <div class="hubspot-title">[ TRANSMISSION INTERCEPTED ]</div>
+                <div class="hubspot-subtitle">Join the resistance. Sign up for updates on the book "Welcome to Planet Burnout!" and receive exclusive intel from Korob.</div>
+            </div>
             <div class="hs-form-frame" data-region="na1" data-form-id="f62a8c62-080d-4790-81bf-a40c3bdbd2f1" data-portal-id="20347263"></div>
         </div>
     </div>
@@ -348,8 +378,10 @@
                 // Show HubSpot form
                 hubspotSection.style.display = 'block';
 
-                // Scroll to result
-                result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // Scroll to HubSpot section so users see the signup form
+                setTimeout(() => {
+                    hubspotSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 500);
 
             } catch (err) {
                 console.error('Error:', err);

@@ -24,23 +24,34 @@ exports.handler = async (event, context) => {
             apiKey: process.env.ANTHROPIC_API_KEY,
         });
 
+        // Extract significant words from the story to explicitly ban them
+        const storyWords = story.toLowerCase().match(/\b[a-z]{3,}\b/g) || [];
+        const uniqueWords = [...new Set(storyWords)].slice(0, 20).join(', ');
+
         // Generate call sign using Claude
         const message = await anthropic.messages.create({
             model: 'claude-3-5-sonnet-20241022',
             max_tokens: 100,
             messages: [{
                 role: 'user',
-                content: `You are a military call sign generator for Planet Korob, a gritty sci-fi military outpost. Based on the following story, generate a unique call sign that is:
+                content: `You are a military call sign generator for Planet Korob, a gritty sci-fi military outpost.
+
+STRICT RULE - BANNED WORDS: You must NOT use any of these words from the user's story: ${uniqueWords}
+
+Instead, use SYNONYMS or THEMATICALLY RELATED words. Examples:
+- "winter" → use: frost, blizzard, arctic, icicle (NOT winter)
+- "cat" → use: feline, whisker, prowler, claw (NOT cat)
+- "fire" → use: inferno, ember, blaze, scorch (NOT fire)
+
+Generate a call sign that is:
 - 1-3 words maximum
-- Mix of military, personality traits, and sci-fi themes
-- Gritty and fitting for a post-apocalyptic wasteland setting
+- Gritty, military, post-apocalyptic sci-fi themed
 - Similar to Fallout/military aviation call signs
-- Do NOT use quotation marks
-- CRITICAL: Do NOT use any exact words from the story. Instead, use synonyms, related concepts, or thematically associated words. For example, if the story mentions "winter", use words like "frost", "blizzard", "arctic", or "flake" - never "winter" itself.
+- NO quotation marks
 
 Story: ${story}
 
-Respond with ONLY the call sign, nothing else. Make it memorable and badass. Remember: no words directly from the story - only synonyms or associated terms.`
+Respond with ONLY the call sign. Use synonyms or related concepts - NEVER the exact words listed above.`
             }]
         });
 
