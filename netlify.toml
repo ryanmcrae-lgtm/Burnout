@@ -2,6 +2,24 @@
   publish = "."
   functions = "netlify/functions"
 
+# Serve blog index
+[[redirects]]
+  from = "/blog"
+  to = "/blog/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/blog/"
+  to = "/blog/index.html"
+  status = 200
+
+# Serve individual blog posts
+[[redirects]]
+  from = "/blog/posts/:post"
+  to = "/blog/posts/:post"
+  status = 200
+
+# Fallback: serve main app for all other routes
 [[redirects]]
   from = "/*"
   to = "/index.html"

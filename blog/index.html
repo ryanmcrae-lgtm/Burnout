@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Field Reports | Planet Burnout</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background: #0a0a0a;
+            color: #00ff00;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* CRT Screen Effect */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Glow effect */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.6) 100%);
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .page-wrapper {
+            max-width: 900px;
+            width: 90%;
+            margin: 0 auto;
+            padding: 40px 0 60px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* NAV */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px solid #00ff00;
+            background: rgba(0, 20, 0, 0.8);
+            padding: 12px 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+        }
+
+        nav .nav-brand {
+            font-size: 1em;
+            text-decoration: none;
+            color: #00ff00;
+            text-shadow: 0 0 8px #00ff00;
+            letter-spacing: 2px;
+        }
+
+        nav .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        nav .nav-links a {
+            color: #00ff00;
+            text-decoration: none;
+            font-size: 0.85em;
+            letter-spacing: 1px;
+            opacity: 0.8;
+            transition: opacity 0.2s, text-shadow 0.2s;
+        }
+
+        nav .nav-links a:hover,
+        nav .nav-links a.active {
+            opacity: 1;
+            text-shadow: 0 0 8px #00ff00;
+        }
+
+        /* HEADER */
+        .blog-header {
+            border: 3px solid #00ff00;
+            background: rgba(0, 20, 0, 0.8);
+            padding: 30px;
+            margin-bottom: 40px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 40px rgba(0, 255, 0, 0.05);
+            position: relative;
+            animation: flicker 0.15s infinite alternate;
+        }
+
+        .screen-corner {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #00ff00;
+        }
+        .screen-corner.top-left    { top: 8px; left: 8px; border-right: none; border-bottom: none; }
+        .screen-corner.top-right   { top: 8px; right: 8px; border-left: none; border-bottom: none; }
+        .screen-corner.bottom-left { bottom: 8px; left: 8px; border-right: none; border-top: none; }
+        .screen-corner.bottom-right{ bottom: 8px; right: 8px; border-left: none; border-top: none; }
+
+        @keyframes flicker {
+            0%   { opacity: 0.98; }
+            100% { opacity: 1; }
+        }
+
+        .blog-header h1 {
+            font-size: 2em;
+            letter-spacing: 3px;
+            text-shadow: 0 0 12px #00ff00;
+            margin-bottom: 8px;
+        }
+
+        .blog-header .transmission-id {
+            font-size: 0.75em;
+            opacity: 0.6;
+            letter-spacing: 2px;
+        }
+
+        /* FILTER BAR */
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid rgba(0, 255, 0, 0.4);
+            color: rgba(0, 255, 0, 0.6);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75em;
+            padding: 6px 14px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: rgba(0, 255, 0, 0.1);
+            border-color: #00ff00;
+            color: #00ff00;
+            box-shadow: 0 0 8px rgba(0, 255, 0, 0.3);
+        }
+
+        /* POST GRID */
+        .posts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        /* POST CARD */
+        .post-card {
+            border: 2px solid #00ff00;
+            background: rgba(0, 20, 0, 0.7);
+            padding: 24px;
+            position: relative;
+            cursor: pointer;
+            transition: box-shadow 0.2s, background 0.2s;
+            text-decoration: none;
+            color: #00ff00;
+            display: block;
+        }
+
+        .post-card:hover {
+            background: rgba(0, 40, 0, 0.7);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.4);
+        }
+
+        .post-card .post-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.72em;
+            opacity: 0.6;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .post-card .tag {
+            border: 1px solid rgba(0, 255, 0, 0.5);
+            padding: 2px 8px;
+            font-size: 0.7em;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .post-card h2 {
+            font-size: 1.2em;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            text-shadow: 0 0 6px rgba(0, 255, 0, 0.5);
+        }
+
+        .post-card .excerpt {
+            font-size: 0.88em;
+            line-height: 1.7;
+            opacity: 0.8;
+            margin-bottom: 16px;
+        }
+
+        .post-card .read-more {
+            font-size: 0.8em;
+            letter-spacing: 2px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .post-card:hover .read-more {
+            opacity: 1;
+        }
+
+        .post-card .corner-mark {
+            position: absolute;
+            bottom: 10px;
+            right: 14px;
+            font-size: 0.65em;
+            opacity: 0.3;
+        }
+
+        /* Featured post (first one) */
+        .post-card.featured {
+            border-width: 3px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+        }
+
+        .post-card.featured::before {
+            content: "[ FEATURED TRANSMISSION ]";
+            display: block;
+            font-size: 0.65em;
+            letter-spacing: 2px;
+            opacity: 0.5;
+            margin-bottom: 8px;
+        }
+
+        /* PAGINATION */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 40px;
+        }
+
+        .pagination a {
+            color: #00ff00;
+            text-decoration: none;
+            border: 1px solid rgba(0, 255, 0, 0.4);
+            padding: 8px 16px;
+            font-size: 0.8em;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+        }
+
+        .pagination a:hover,
+        .pagination a.active {
+            background: rgba(0, 255, 0, 0.1);
+            border-color: #00ff00;
+            box-shadow: 0 0 8px rgba(0, 255, 0, 0.3);
+        }
+
+        /* STATUS BAR */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7em;
+            opacity: 0.4;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            padding: 0 4px;
+        }
+
+        @media (max-width: 600px) {
+            .blog-header h1 { font-size: 1.4em; }
+            nav .nav-brand  { font-size: 0.8em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+
+        <nav>
+            <a class="nav-brand" href="/">[ PLANET BURNOUT ]</a>
+            <div class="nav-links">
+                <a href="/">HOME</a>
+                <a href="/blog/" class="active">FIELD REPORTS</a>
+            </div>
+        </nav>
+
+        <div class="blog-header">
+            <div class="screen-corner top-left"></div>
+            <div class="screen-corner top-right"></div>
+            <div class="screen-corner bottom-left"></div>
+            <div class="screen-corner bottom-right"></div>
+            <h1>FIELD REPORTS</h1>
+            <div class="transmission-id">[ KOROB OUTPOST DISPATCH NETWORK // UPLINK ACTIVE ]</div>
+        </div>
+
+        <div class="status-bar">
+            <span>RECORDS FOUND: <span id="postCount">6</span></span>
+            <span>SECTOR: ALL</span>
+            <span>STATUS: ONLINE</span>
+        </div>
+
+        <div class="filter-bar">
+            <button class="filter-btn active" data-tag="all" onclick="filterPosts('all')">ALL SECTORS</button>
+            <button class="filter-btn" data-tag="dispatch" onclick="filterPosts('dispatch')">DISPATCH</button>
+            <button class="filter-btn" data-tag="survival" onclick="filterPosts('survival')">SURVIVAL LOG</button>
+            <button class="filter-btn" data-tag="intel" onclick="filterPosts('intel')">INTEL</button>
+            <button class="filter-btn" data-tag="lore" onclick="filterPosts('lore')">LORE ARCHIVE</button>
+        </div>
+
+        <div class="posts-grid" id="postsGrid">
+            <!-- Posts are rendered by JS from the posts array below -->
+        </div>
+
+        <div class="pagination">
+            <a href="#" class="active">01</a>
+        </div>
+
+    </div>
+
+    <script>
+        const posts = [
+            {
+                id: "welcome-dispatch",
+                tag: "dispatch",
+                date: "2026.02.19",
+                title: "INITIAL TRANSMISSION: Welcome to Planet Burnout",
+                excerpt: "You survived the crossing. You found us. That means you already know something most people don't — that the old world's rules don't apply out here. Planet Korob doesn't care who you were. It only cares what you do next.",
+                featured: true
+            },
+            {
+                id: "survival-guide-sector-7",
+                tag: "survival",
+                date: "2026.02.14",
+                title: "SURVIVAL LOG 001: Sector 7 Dust Protocols",
+                excerpt: "The grey dust of Sector 7 is not just atmospheric particulate. It gets into everything — your lungs, your gear, your mind. Operators who've worked the sector for more than 30 cycles report auditory anomalies. This guide covers dust filtration, comm hardening, and the three rules that keep you breathing."
+            },
+            {
+                id: "callsign-origins",
+                tag: "lore",
+                date: "2026.02.10",
+                title: "LORE ARCHIVE: The Origin of Call Signs on Korob",
+                excerpt: "Before the colonisation effort collapsed, command issued designations — serial numbers. Cold, efficient, disposable. When the supply lines went dark and central authority fractured, the survivors gave each other names instead. Names earned from deeds. That tradition never died."
+            },
+            {
+                id: "intel-the-silence",
+                tag: "intel",
+                date: "2026.02.05",
+                title: "INTEL BRIEF: The Silence in Grid 9",
+                excerpt: "Three recon teams entered Grid 9 over the past standard month. None returned. Comms cut at the same coordinates each time — 44.7 clicks from Outpost Sable. We are not yet classifying this as hostile contact. We are classifying it as unknown. Unknown is worse."
+            },
+            {
+                id: "survival-log-water",
+                tag: "survival",
+                date: "2026.01.28",
+                title: "SURVIVAL LOG 002: Water Reclamation Under Field Conditions",
+                excerpt: "There is no clean water on Korob. There is only water that will kill you fast and water that will kill you slow. Experienced operators use reclamation rigs — cobbled together from salvaged condensers and carbon-filtered tank liners. Here is how to build one from what the wasteland gives you."
+            },
+            {
+                id: "lore-planet-burnout-name",
+                tag: "lore",
+                date: "2026.01.20",
+                title: "LORE ARCHIVE: Why They Call It Planet Burnout",
+                excerpt: "The official designation is Korob-IV. The colonisation report called it 'a promising mid-atmosphere terrestrial candidate.' The people who tried to live there called it something else. The name Planet Burnout didn't come from the heat, or the radiation, or the endless grinding attrition of survival. It came from what it does to the ones who stay."
+            }
+        ];
+
+        function renderPosts(filter) {
+            const grid = document.getElementById('postsGrid');
+            const filtered = filter === 'all' ? posts : posts.filter(p => p.tag === filter);
+
+            document.getElementById('postCount').textContent = filtered.length;
+
+            grid.innerHTML = filtered.map((post, i) => `
+                <a class="post-card${post.featured && filter === 'all' ? ' featured' : ''}"
+                   href="/blog/posts/${post.id}.html">
+                    <div class="post-meta">
+                        <span class="tag">${post.tag}</span>
+                        <span>${post.date}</span>
+                    </div>
+                    <h2>${post.title}</h2>
+                    <div class="excerpt">${post.excerpt}</div>
+                    <div class="read-more">&gt; READ TRANSMISSION _</div>
+                    <div class="corner-mark">[${String(i + 1).padStart(3, '0')}]</div>
+                </a>
+            `).join('');
+        }
+
+        function filterPosts(tag) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tag === tag);
+            });
+            renderPosts(tag);
+        }
+
+        renderPosts('all');
+    </script>
+</body>
+</html>
